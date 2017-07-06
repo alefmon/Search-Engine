@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Alef Search Engine</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+	<!-- font-family -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<!-- font awesome -->
+	<script src="https://use.fontawesome.com/49da334af9.js"></script>
+
+	<script type="text/javascript" src="assets/js/lib/jquery-3.1.1.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+</head>
+<body>
+	<div id="container" class="container">
+		<h1 id="alef">Alef Search Engine	<i class="fa fa-search" aria-hidden="true"></i></h1>
+		<form id="myForm" enctype='application/json' action="/json" method="post">
+			<input id="search-text" type="text" name="search-text" placeholder="Search text">
+			
+			<label class="checkbox-inline"> Combined Model
+				<input type="radio" name="model" value="comb" checked>
+			</label>
+
+			<label class="checkbox-inline"> Vector Model
+				<input type="radio" name="model" value="vec">
+			</label>
+
+			<label class="checkbox-inline"> Vector Model + AnchorRank
+				<input type="radio" name="model" value="anchor">
+			</label>
+			
+			<label class="checkbox-inline"> Vector Model + PageRank
+				<input type="radio" name="model" value="pg">
+			</label>
+
+			<label class="checkbox-inline"> Boolean Model
+				<input type="radio" name="model" value="boolean">
+			</label>
+
+			<input id="search-button" class="btn btn-primary btn-lg active" type="submit" value="Search !" >
+		</form>
+
+	</div>
+	<div class="container">
+        <div class="row" id='results' name='results'></div>
+    </div>
+
+	<script type="text/javascript" src="assets/js/app.js"></script>
+
+	<script type="text/javascript">
+		function showResult(data) {
+            // var hrefNextPage;
+            // currPage = data.page;
+            console.log("In fuction with data: "+data);
+            $("#results").empty();
+            var result = $('#results');
+            var box = "<div class='result-item'>" + data + "<br/> hu3 </div>";
+            result.append(box);
+            // for (var i = 0; i < data.result.length; i++) {
+            //   var item = data.result[i];
+            //   var title = "<h4>" + item.title + "</h4>";
+            //   var content = "<p><a href='" + item.url + "' target='_blank'>" + item.url + "</a></p>";
+            //   var box = "<div class='result-item'>" + title + "<br/>" + content + "</div>";
+            //   result.append(box);
+            // };
+        }
+		$("#search-text").keypress(function(event) {
+		    if (event.which == 13) {
+		        event.preventDefault();
+		        $("#myForm").submit();
+		    }
+		});
+	    $('#myForm').submit(function( event ) {	
+			var formData = '{"search-text": "'+$('#search-text').val()+'","model": "'+$('input[name="model"]:checked').val() +'"}';
+			console.log("DATA: " + formData);
+			$("#results").empty();
+			$("#results").append('Processing query...');				  		
+			$.ajax({
+				type: "POST",
+			  	url: "/json",
+				data: formData,
+				success: function(data){
+				  	var docs = data.split(' ');
+				  	$("#results").empty();
+				  	if(!data){
+					  	$("#results").append('No results !');				  		
+				  	}
+				  	docs.forEach(function(x){
+					  	console.log(x);
+					  	$("#results").append('<a href="http://'+x+'">'+x+'</a><br>');
+				  	});
+				},
+				error: function(xhr, status){
+	            	alert("Sorry, there was a problem!");
+	        	},
+			  	contentType : "application/json"
+			});
+			//showResult($('#search-text').val());
+			return false;
+		});
+
+	</script>
+
+</body>
+</html>
