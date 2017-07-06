@@ -10,10 +10,12 @@
 
 3) To build and install gumbo library, you should go to gumbo folder and run the following code in terminal:
 
+```
 	$ ./autogen.sh
 	$ ./configure
 	$ make
 	$ sudo make install
+```	
 
 4) HTML files must be inside folder ``/Indexer/collection``.
 
@@ -43,7 +45,7 @@ $ ./build/http_examples
 3) Now, wait until the search engine load index files. After that, the server should be running ! Now, you just have to access <http://localhost:8080> and use Alef Search Engine !
 
 
-##References
+## References
 
 Eidheim Simple Web-Server <https://github.com/eidheim/Simple-Web-Server>
   
